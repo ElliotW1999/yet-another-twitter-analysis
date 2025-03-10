@@ -1,0 +1,21 @@
+name: Security Check
+
+on: [push, pull_request]
+
+jobs:
+  check-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: pip install pytest
+
+      - name: Run API Key Check
+        run: pytest tests/test_no_api_keys.py
