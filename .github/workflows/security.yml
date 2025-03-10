@@ -18,4 +18,4 @@ jobs:
         run: pip install pytest
 
       - name: Run API Key Check
-        run: pytest test_no_api_keys.py
+        run: pytest tests/test_no_api_keys.py
