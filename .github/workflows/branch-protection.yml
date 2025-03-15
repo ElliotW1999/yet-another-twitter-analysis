@@ -19,9 +19,3 @@ jobs:
             echo "ERROR: Pull requests to main must come from dev!"
             exit 1
           fi
-
-      - name: Prevent Direct Pushes to Main
-        if: github.event_name == 'push'
-        run: |
-          echo "ERROR: Direct pushes to main are not allowed!"
-          exit 1
