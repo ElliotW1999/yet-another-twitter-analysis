@@ -5,13 +5,16 @@
 Like this but with dev instead of test - new features are branched from dev  
 
 ## Features:  
+### Docker  
+For building and deploying images for each update to the production source code  
+
 ### GitHub actions  
 For CI/CD, includes:  
-#### Code testing  
-#### Security checks
-#### Build and deploy Docker images  
-#### Terraform updates
-  
+- Code testing
+- Security checks
+- Build and deploy Docker images
+- Terraform updates
+    
 ### Terraform  
 For IaC on AWS  
 
