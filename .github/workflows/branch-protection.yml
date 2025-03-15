@@ -1,0 +1,27 @@
+name: Enforce PR from Dev
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if the PR source is dev
+        if: github.event_name == 'pull_request'
+        run: |
+          if [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" != "dev" ]]; then
+            echo "ERROR: Pull requests to main must come from dev!"
+            exit 1
+          fi
+
+      - name: Prevent Direct Pushes to Main
+        if: github.event_name == 'push'
+        run: |
+          echo "ERROR: Direct pushes to main are not allowed!"
+          exit 1
