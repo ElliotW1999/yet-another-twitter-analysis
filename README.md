@@ -6,8 +6,12 @@ Like this but with dev instead of test - new features are branched from dev
 
 ## Features:  
 ### GitHub actions  
-For CI/CD, includes code testing, security checks and terraform updates  
-
+For CI/CD, includes:  
+#### Code testing  
+#### Security checks
+#### Build and deploy Docker images  
+#### Terraform updates
+  
 ### Terraform  
 For IaC on AWS  
 
