@@ -21,7 +21,9 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-west-2"
+  region     = "us-west-2"
+  access_key = ${{ secrets.AWS_ACCESS_KEY_ID }}
+  secret_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 }
 
 resource "aws_instance" "twitter_data" {
