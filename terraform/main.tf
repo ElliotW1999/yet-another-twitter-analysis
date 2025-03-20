@@ -34,8 +34,8 @@ resource "aws_instance" "twitter_data" {
   }
 }
 
-resource "aws_s3_bucket" "twitter_raw_data" {
-  bucket        = "twitter_raw_data_bucket"
+resource "aws_s3_bucket" "yet-another-twitter-analysis-bucket" {
+  bucket        = "yet-another-twitter-analysis-bucket"
 }
 
 
