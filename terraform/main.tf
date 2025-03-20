@@ -38,7 +38,7 @@ resource "aws_s3_bucket" "yet-another-twitter-analysis-bucket" {
   bucket        = "yet-another-twitter-analysis-bucket"
 }
 
-resource "aws_sqs_queue" "twitter-analysis-queue" {
+resource "aws_sqs_queue" "twitter_data_queue" {
   name                      = "twitter-analysis-queue"
   max_message_size          = 2048
   message_retention_seconds = 86400
