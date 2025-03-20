@@ -1,10 +1,10 @@
 # The configuration for the `remote` backend.
-twitter_analysis {
+terraform  {
   backend "remote" {
-    # The name of your twitter_analysis Cloud organization.
+    # The name of your terraform  Cloud organization.
     organization = "yet-another-twitter-analysis"
 
-    # The name of the twitter_analysis Cloud workspace to store twitter_analysis state files in.
+    # The name of the terraform  Cloud workspace to store terraform  state files in.
     workspaces {
       name = "yet-another-twitter-analysis-workspace"
     }
@@ -43,21 +43,21 @@ resource "aws_sqs_queue" "twitter-analysis-queue" {
   max_message_size          = 2048
   message_retention_seconds = 86400
   redrive_policy = jsonencode({
-    deadLetterTargetArn = aws_sqs_queue.twitter_analysis_queue_deadletter.arn
+    deadLetterTargetArn = aws_sqs_queue.terraform _queue_deadletter.arn
     maxReceiveCount     = 4
   })
 }
 
-resource "aws_sqs_queue" "twitter_analysis_queue_deadletter" {
-  name = "twitter_analysis-example-deadletter-queue"
+resource "aws_sqs_queue" "terraform _queue_deadletter" {
+  name = "terraform -example-deadletter-queue"
 }
 
-resource "aws_sqs_queue_redrive_allow_policy" "twitter_analysis_queue_redrive_allow_policy" {
-  queue_url = aws_sqs_queue.twitter_analysis_queue_deadletter.id
+resource "aws_sqs_queue_redrive_allow_policy" "terraform _queue_redrive_allow_policy" {
+  queue_url = aws_sqs_queue.terraform _queue_deadletter.id
 
   redrive_allow_policy = jsonencode({
     redrivePermission = "byQueue",
-    sourceQueueArns   = [aws_sqs_queue.twitter_analysis_queue.arn]
+    sourceQueueArns   = [aws_sqs_queue.terraform _queue.arn]
   })
 }
 
