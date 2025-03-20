@@ -36,7 +36,6 @@ resource "aws_instance" "twitter_data" {
 
 resource "aws_s3_bucket" "twitter_raw_data" {
   bucket        = "twitter_raw_data_bucket"
-  subnet_id     = var.subnet
 }
 
 
