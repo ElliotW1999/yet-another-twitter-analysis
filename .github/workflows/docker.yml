@@ -11,7 +11,7 @@
 #    See the documentation for each action used below for the recommended IAM policies for this IAM user,
 #    and best practices on handling the access key credentials.  
 
-name: Build Docker Image and deploy to Amazon ECS
+name: Build Docker Image and deploy to Amazon ECR
 
 on:
   push:
