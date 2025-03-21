@@ -19,10 +19,10 @@ on:
     paths: ["src/**"]
 
 env:
-  AWS_REGION: us-west-2                       # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: us-west-2                                      # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: yet-another-twitter-analysis-ecr           # set this to your Amazon ECR repository name
-  CONTAINER_NAME: MY_CONTAINER_NAME           # set this to the name of the container in the
-                                               # containerDefinitions section of your task definition (my-image-name:$(date +%s))
+  CONTAINER_NAME: data_ingestion                             # set this to the name of the container in the
+                                                             # containerDefinitions section of your task definition (my-image-name:$(date +%s))
 
 permissions:
   contents: read
