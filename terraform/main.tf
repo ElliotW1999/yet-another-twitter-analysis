@@ -61,6 +61,11 @@ resource "aws_sqs_queue_redrive_allow_policy" "twitter_data_queue_redrive_allow_
   })
 }
 
+resource "aws_ecr_repository" "yet-another-twitter-analysis-ecr" {
+  name = "yet-another-twitter-analysis-ecr"
+}
+
+
 
 variable "subnet" {
   description = "The subnet ID"
