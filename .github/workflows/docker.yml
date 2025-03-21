@@ -61,3 +61,15 @@ jobs:
         docker build -t "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" -f docker/main.dockerfile .
         docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" >> $GITHUB_OUTPUT
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          sudo docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"
+          sudo docker stop "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" || true
+          sudo docker rm "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" || true
+          sudo docker run -d --name "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" -p 80:80 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"
