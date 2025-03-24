@@ -28,6 +28,7 @@ resource "aws_instance" "twitter_data" {
   ami           = "ami-0b6d6dacf350ebc82"
   instance_type = "t2.micro"
   subnet_id     = var.subnet
+  associate_public_ip_address = true  
 
   tags = {
     Name = "twitter_data"
