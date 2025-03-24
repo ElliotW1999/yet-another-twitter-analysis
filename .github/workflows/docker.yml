@@ -23,7 +23,8 @@ env:
   ECR_REPOSITORY: yet-another-twitter-analysis-ecr           # set this to your Amazon ECR repository name
   CONTAINER_NAME: data_ingestion                             # set this to the name of the container in the
                                                              # containerDefinitions section of your task definition (my-image-name:$(date +%s))
-
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  
 permissions:
   contents: read
   
@@ -41,7 +42,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: ${{ env.AWS_REGION }} 
 
     - name: Login to Amazon ECR
       id: login-ecr
