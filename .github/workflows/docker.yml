@@ -23,7 +23,8 @@ env:
   ECR_REPOSITORY: yet-another-twitter-analysis-ecr           # set this to your Amazon ECR repository name
   CONTAINER_NAME: data_ingestion                             # set this to the name of the container in the
                                                              # containerDefinitions section of your task definition (my-image-name:$(date +%s))
-
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  
 permissions:
   contents: read
   
@@ -41,14 +42,11 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: ${{ env.AWS_REGION }} 
 
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
-
-    - name: List repository contents
-      run: ls -la
         
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
@@ -61,3 +59,15 @@ jobs:
         docker build -t "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" -f docker/main.dockerfile .
         docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" >> $GITHUB_OUTPUT
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          sudo docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"
+          sudo docker stop "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" || true
+          sudo docker rm "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" || true
+          sudo docker run -d --name "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" -p 80:80 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"
