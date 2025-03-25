@@ -67,6 +67,10 @@ jobs:
         --output text)
         echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
 
+    - name: Add EC2 to known_hosts
+      run: |
+        ssh-keyscan -H ${{ secrets.PUBLIC_IP }} >> ~/.ssh/known_hosts
+
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
