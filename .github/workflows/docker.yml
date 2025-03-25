@@ -73,6 +73,7 @@ jobs:
         host: ${{ secrets.PUBLIC_IP }}
         username: ubuntu
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
         script: |
           sudo docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"
           sudo docker stop "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" || true
