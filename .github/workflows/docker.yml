@@ -67,10 +67,6 @@ jobs:
         --output text)
         echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
 
-    - name: Add EC2 to known_hosts
-      run: |
-        ssh-keyscan -H ${{ secrets.PUBLIC_IP }} >> ~/.ssh/known_hosts
-
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
@@ -82,4 +78,5 @@ jobs:
           sudo docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"
           sudo docker stop "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" || true
           sudo docker rm "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" || true
-          sudo docker run -d --name "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" -p 80:80 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"
+          sudo docker run -d --name "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" -p 80:80 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"     
+        args: "-o StrictHostKeyChecking=no"
