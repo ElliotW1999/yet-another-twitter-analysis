@@ -29,6 +29,7 @@ resource "aws_instance" "twitter_data" {
   instance_type = "t2.micro"
   subnet_id     = var.subnet
   associate_public_ip_address = true  
+  key_name      = "yet-another-twitter-analysis-key"
 
   tags = {
     Name = "twitter_data"
