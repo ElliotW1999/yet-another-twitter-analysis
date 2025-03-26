@@ -83,11 +83,6 @@ jobs:
         ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 
-    - name: Debug SSH Connection
-      run: |
-        ssh -vvv -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.PUBLIC_IP }}
-
-
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
