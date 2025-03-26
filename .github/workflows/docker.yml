@@ -85,14 +85,14 @@ jobs:
 
     - name: Debug SSH Connection
       run: |
-        ssh -vvv -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.PUBLIC_IP }}
+        ssh -vvv -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.PUBLIC_IP }}
 
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.PUBLIC_IP }}
-        username: ubuntu
+        username: ec2-user
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
