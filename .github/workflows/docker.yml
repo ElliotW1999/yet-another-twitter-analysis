@@ -1,3 +1,4 @@
+
 # This workflow will build and push a new container image to Amazon ECR,
 # when there is a push to the "main" branch that updates source code.
 #
@@ -69,20 +70,6 @@ jobs:
         --output text)
         echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
 
-        
-    - name: Add EC2 to known_hosts
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan -H ${{ secrets.PUBLIC_IP }} >> ~/.ssh/known_hosts
-
-    - name: Setup SSH Key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
@@ -95,5 +82,4 @@ jobs:
           sudo docker stop "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" || true
           sudo docker rm "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" || true
           sudo docker run -d --name "$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME" -p 80:80 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/"$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME"     
-      env:
-        SSH_ARGS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+      
