@@ -67,6 +67,17 @@ jobs:
         --output text)
         echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
 
+    - name: Configure SSH on EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.PUBLIC_IP }}
+        username: ubuntu
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          echo "CASignatureAlgorithms +ssh-rsa" | sudo tee /etc/ssh/sshd_config.d/custom.conf
+          sudo systemctl restart ssh
+
         
     - name: Add EC2 to known_hosts
       run: |
