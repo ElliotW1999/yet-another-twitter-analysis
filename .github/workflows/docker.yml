@@ -73,7 +73,7 @@ jobs:
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
-        host: $PUBLIC_IP
+        host: ${{ env.PUBLIC_IP }}
         username: ec2-user
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
