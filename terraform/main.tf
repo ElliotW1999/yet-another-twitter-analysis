@@ -34,11 +34,11 @@ resource "aws_instance" "twitter_data" {
 
   user_data = <<-EOF
     #!/bin/bash
-    apt-get update -y
-    apt-get install -y docker.io
-    systemctl enable docker
-    systemctl start docker
-    usermod -aG docker ubuntu
+    sudo yum update -y
+    sudo yum install -y docker
+    sudo systemctl enable docker
+    sudo systemctl start docker
+    sudo usermod -aG docker ec2-user
   EOF
 
   tags = {
