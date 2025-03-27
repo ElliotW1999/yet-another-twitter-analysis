@@ -79,7 +79,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          export my_container="${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.CONTAINER_NAME }}"
+          export my_container="${{ env.ECR_REPOSITORY }}:${{ env.CONTAINER_NAME }}"
           sudo docker stop $my_container || true
           sudo docker rm $my_container || true
           sudo docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$my_container
