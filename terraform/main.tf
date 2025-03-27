@@ -24,6 +24,7 @@ provider "aws" {
   region     = "us-west-2"
 }
 
+# EC2
 resource "aws_instance" "twitter_data" {
   ami           = "ami-0b6d6dacf350ebc82"
   instance_type = "t2.micro"
@@ -36,10 +37,14 @@ resource "aws_instance" "twitter_data" {
   }
 }
 
+
+# S3
 resource "aws_s3_bucket" "yet-another-twitter-analysis-bucket" {
   bucket        = "yet-another-twitter-analysis-bucket"
 }
 
+
+# SQS
 resource "aws_sqs_queue" "twitter_data_queue" {
   name                      = "twitter-analysis-queue"
   max_message_size          = 2048
@@ -50,6 +55,7 @@ resource "aws_sqs_queue" "twitter_data_queue" {
   })
 }
 
+# Second queue for failed messages
 resource "aws_sqs_queue" "twitter_data_queue_deadletter" {
   name = "twitter-data-deadletter-queue"
 }
@@ -63,12 +69,36 @@ resource "aws_sqs_queue_redrive_allow_policy" "twitter_data_queue_redrive_allow_
   })
 }
 
+
+# ECR
 resource "aws_ecr_repository" "yet-another-twitter-analysis-ecr" {
   name = "yet-another-twitter-analysis-ecr"
 }
+# Apply a Lifecycle Policy to Delete Untagged Images After 7 Days
+resource "aws_ecr_lifecycle_policy" "untagged_cleanup" {
+  repository = aws_ecr_repository.yet-another-twitter-analysis-ecr.name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Delete untagged images older than 7 days"
+        selection = {
+          tagStatus   = "untagged"
+          countType   = "sinceImagePushed"
+          countUnit   = "days"
+          countNumber = 1
+        }
+        action = {
+          type = "expire"
+        }
+      }
+    ]
+  })
+}
 
 
-
+# GLOBAL VARS
 variable "subnet" {
   description = "The subnet ID"
   type        = string
