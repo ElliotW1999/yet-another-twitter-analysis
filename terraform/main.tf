@@ -32,6 +32,15 @@ resource "aws_instance" "twitter_data" {
   associate_public_ip_address = true  
   key_name      = "yet-another-twitter-analysis-key"
 
+  user_data = <<-EOF
+    #!/bin/bash
+    apt-get update -y
+    apt-get install -y docker.io
+    systemctl enable docker
+    systemctl start docker
+    usermod -aG docker ubuntu
+  EOF
+
   tags = {
     Name = "twitter_data"
   }
