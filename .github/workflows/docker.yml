@@ -80,9 +80,10 @@ jobs:
         port: 22
         script: |
           export my_container="${{ env.ECR_REPOSITORY }}:${{ env.CONTAINER_NAME }}"
-          sudo docker stop $my_container || true
-          sudo docker rm $my_container || true
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+          docker stop ${{ env.CONTAINER_NAME }}
+          docker rm ${{ env.CONTAINER_NAME }}
+          docker rmi ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$my_container
           docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$my_container
-          sudo docker run -d --name $my_container -p 80:80 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$my_container   
+          docker run -d --name ${{ env.CONTAINER_NAME }} -p 80:80 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$my_container
+
       
