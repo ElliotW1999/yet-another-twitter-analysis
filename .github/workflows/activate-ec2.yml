@@ -3,6 +3,9 @@ name: Turn on EC2 instance
 on:
   workflow_dispatch:
 
+env:
+  AWS_REGION: us-west-2   
+  
 jobs:
   restricted-job:
     if: github.actor == 'bantam-rooster' || github.actor == 'Elliotw1999'
