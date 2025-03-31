@@ -1,0 +1,38 @@
+name: Turn on EC2 instance
+
+on:
+  workflow_dispatch:
+
+jobs:
+  restricted-job:
+    if: github.actor == 'bantam-rooster' || github.actor == 'Elliotw1999'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }} 
+
+      - name: Find EC2 Instance ID by Name
+        id: find-instance
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=twitter_data" \
+            --query "Reservations[].Instances[].InstanceId" --output text)
+          
+          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
+          echo "Instance ID: $INSTANCE_ID"
+
+      - name: Start EC2 instance
+        run: |
+          if [ -z "$INSTANCE_ID" ]; then
+            echo "No instance found. Exiting."
+            exit 1
+          fi
+          aws ec2 start-instances --instance-ids $INSTANCE_ID
+          echo "Started EC2 instance: $INSTANCE_ID"
